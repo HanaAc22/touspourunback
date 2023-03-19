@@ -16,15 +16,12 @@ class ForumAnswers
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[ORM\Column(type: Types::TEXT)]
     private ?string $answers = null;
 
-    #[ORM\ManyToOne(inversedBy: 'answers')]
+    #[ORM\ManyToOne(inversedBy: 'forumAnswers')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?ForumQuestions $questions = null;
-
-    #[ORM\Column]
-    private ?\DateTimeImmutable $createdAt = null;
+    private ?ForumQuestions $question = null;
 
     public function getId(): ?int
     {
@@ -36,33 +33,21 @@ class ForumAnswers
         return $this->answers;
     }
 
-    public function setAnswers(?string $answers): self
+    public function setAnswers(string $answers): self
     {
         $this->answers = $answers;
 
         return $this;
     }
 
-    public function getQuestions(): ?ForumQuestions
+    public function getQuestion(): ?ForumQuestions
     {
-        return $this->questions;
+        return $this->question;
     }
 
-    public function setQuestions(?ForumQuestions $questions): self
+    public function setQuestion(?ForumQuestions $question): self
     {
-        $this->questions = $questions;
-
-        return $this;
-    }
-
-    public function getCreatedAt(): ?\DateTimeImmutable
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(\DateTimeImmutable $createdAt): self
-    {
-        $this->createdAt = $createdAt;
+        $this->question = $question;
 
         return $this;
     }

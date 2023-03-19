@@ -17,7 +17,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 180, unique: true, nullable: false)]
+    #[ORM\Column(length: 180, unique: true)]
     private ?string $email = null;
 
     #[ORM\Column]
@@ -26,19 +26,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var string The hashed password
      */
-    #[ORM\Column(nullable: false)]
-    private string $password;
+    #[ORM\Column]
+    private ?string $password = null;
 
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: ForumQuestions::class)]
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Profil::class)]
+    private Collection $profil;
+
+    #[ORM\OneToMany(mappedBy: 'author', targetEntity: ForumQuestions::class)]
     private Collection $forumQuestions;
-
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Roles::class)]
-    private Collection $profileRole;
 
     public function __construct()
     {
+        $this->profil = new ArrayCollection();
         $this->forumQuestions = new ArrayCollection();
-        $this->profileRole = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -112,6 +112,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
+     * @return Collection<int, Profil>
+     */
+    public function getProfil(): Collection
+    {
+        return $this->profil;
+    }
+
+    public function addProfil(Profil $profil): self
+    {
+        if (!$this->profil->contains($profil)) {
+            $this->profil->add($profil);
+            $profil->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProfil(Profil $profil): self
+    {
+        if ($this->profil->removeElement($profil)) {
+            // set the owning side to null (unless already changed)
+            if ($profil->getUser() === $this) {
+                $profil->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
      * @return Collection<int, ForumQuestions>
      */
     public function getForumQuestions(): Collection
@@ -123,7 +153,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if (!$this->forumQuestions->contains($forumQuestion)) {
             $this->forumQuestions->add($forumQuestion);
-            $forumQuestion->setUser($this);
+            $forumQuestion->setAuthor($this);
         }
 
         return $this;
@@ -133,38 +163,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if ($this->forumQuestions->removeElement($forumQuestion)) {
             // set the owning side to null (unless already changed)
-            if ($forumQuestion->getUser() === $this) {
-                $forumQuestion->setUser(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Roles>
-     */
-    public function getProfileRole(): Collection
-    {
-        return $this->profileRole;
-    }
-
-    public function addProfileRole(Roles $profileRole): self
-    {
-        if (!$this->profileRole->contains($profileRole)) {
-            $this->profileRole->add($profileRole);
-            $profileRole->setUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeProfileRole(Roles $profileRole): self
-    {
-        if ($this->profileRole->removeElement($profileRole)) {
-            // set the owning side to null (unless already changed)
-            if ($profileRole->getUser() === $this) {
-                $profileRole->setUser(null);
+            if ($forumQuestion->getAuthor() === $this) {
+                $forumQuestion->setAuthor(null);
             }
         }
 

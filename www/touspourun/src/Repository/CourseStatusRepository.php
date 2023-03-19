@@ -2,26 +2,26 @@
 
 namespace App\Repository;
 
-use App\Entity\ContentStaus;
+use App\Entity\CourseStatus;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<ContentStaus>
+ * @extends ServiceEntityRepository<CourseStatus>
  *
- * @method ContentStaus|null find($id, $lockMode = null, $lockVersion = null)
- * @method ContentStaus|null findOneBy(array $criteria, array $orderBy = null)
- * @method ContentStaus[]    findAll()
- * @method ContentStaus[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method CourseStatus|null find($id, $lockMode = null, $lockVersion = null)
+ * @method CourseStatus|null findOneBy(array $criteria, array $orderBy = null)
+ * @method CourseStatus[]    findAll()
+ * @method CourseStatus[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class ContentStausRepository extends ServiceEntityRepository
+class CourseStatusRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, ContentStaus::class);
+        parent::__construct($registry, CourseStatus::class);
     }
 
-    public function save(ContentStaus $entity, bool $flush = false): void
+    public function save(CourseStatus $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
 
@@ -30,7 +30,7 @@ class ContentStausRepository extends ServiceEntityRepository
         }
     }
 
-    public function remove(ContentStaus $entity, bool $flush = false): void
+    public function remove(CourseStatus $entity, bool $flush = false): void
     {
         $this->getEntityManager()->remove($entity);
 
@@ -40,7 +40,7 @@ class ContentStausRepository extends ServiceEntityRepository
     }
 
 //    /**
-//     * @return ContentStaus[] Returns an array of ContentStaus objects
+//     * @return CourseStatus[] Returns an array of CourseStatus objects
 //     */
 //    public function findByExampleField($value): array
 //    {
@@ -54,7 +54,7 @@ class ContentStausRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-//    public function findOneBySomeField($value): ?ContentStaus
+//    public function findOneBySomeField($value): ?CourseStatus
 //    {
 //        return $this->createQueryBuilder('c')
 //            ->andWhere('c.exampleField = :val')

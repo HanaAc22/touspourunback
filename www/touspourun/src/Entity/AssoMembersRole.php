@@ -2,12 +2,10 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiResource;
 use App\Repository\AssoMembersRoleRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: AssoMembersRoleRepository::class)]
-#[ApiResource]
 class AssoMembersRole
 {
     #[ORM\Id]
@@ -16,10 +14,10 @@ class AssoMembersRole
     private ?int $id = null;
 
     #[ORM\Column]
-    private ?bool $assoProfileAdmin = null;
+    private ?bool $assoRoleAdmin = null;
 
-    //#[ORM\OneToOne(mappedBy: 'membersRole', cascade: ['persist', 'remove'])]
-    #[ORM\Column]
+    #[ORM\OneToOne(inversedBy: 'assoMembersRole', cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(nullable: false)]
     private ?AssoMembers $assoMembers = null;
 
     public function getId(): ?int
@@ -27,14 +25,14 @@ class AssoMembersRole
         return $this->id;
     }
 
-    public function isAssoProfileAdmin(): ?bool
+    public function isAssoRoleAdmin(): ?bool
     {
-        return $this->assoProfileAdmin;
+        return $this->assoRoleAdmin;
     }
 
-    public function setAssoProfileAdmin(bool $assoProfileAdmin): self
+    public function setAssoRoleAdmin(bool $assoRoleAdmin): self
     {
-        $this->assoProfileAdmin = $assoProfileAdmin;
+        $this->assoRoleAdmin = $assoRoleAdmin;
 
         return $this;
     }
@@ -44,18 +42,8 @@ class AssoMembersRole
         return $this->assoMembers;
     }
 
-    public function setAssoMembers(?AssoMembers $assoMembers): self
+    public function setAssoMembers(AssoMembers $assoMembers): self
     {
-        // unset the owning side of the relation if necessary
-        //if ($assoMembers === null && $this->assoMembers !== null) {
-        //    $this->assoMembers->setMembersRole(null);
-        //}
-
-        // set the owning side of the relation if necessary
-        //if ($assoMembers !== null && $assoMembers->getMembersRole() !== $this) {
-        //    $assoMembers->setMembersRole($this);
-        //}
-
         $this->assoMembers = $assoMembers;
 
         return $this;

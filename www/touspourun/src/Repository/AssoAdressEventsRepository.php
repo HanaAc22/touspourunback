@@ -2,26 +2,26 @@
 
 namespace App\Repository;
 
-use App\Entity\AssoAddressEvent;
+use App\Entity\AssoAdressEvents;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<AssoAddressEvent>
+ * @extends ServiceEntityRepository<AssoAdressEvents>
  *
- * @method AssoAddressEvent|null find($id, $lockMode = null, $lockVersion = null)
- * @method AssoAddressEvent|null findOneBy(array $criteria, array $orderBy = null)
- * @method AssoAddressEvent[]    findAll()
- * @method AssoAddressEvent[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method AssoAdressEvents|null find($id, $lockMode = null, $lockVersion = null)
+ * @method AssoAdressEvents|null findOneBy(array $criteria, array $orderBy = null)
+ * @method AssoAdressEvents[]    findAll()
+ * @method AssoAdressEvents[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class AssoAddressEventRepository extends ServiceEntityRepository
+class AssoAdressEventsRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, AssoAddressEvent::class);
+        parent::__construct($registry, AssoAdressEvents::class);
     }
 
-    public function save(AssoAddressEvent $entity, bool $flush = false): void
+    public function save(AssoAdressEvents $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
 
@@ -30,7 +30,7 @@ class AssoAddressEventRepository extends ServiceEntityRepository
         }
     }
 
-    public function remove(AssoAddressEvent $entity, bool $flush = false): void
+    public function remove(AssoAdressEvents $entity, bool $flush = false): void
     {
         $this->getEntityManager()->remove($entity);
 
@@ -40,7 +40,7 @@ class AssoAddressEventRepository extends ServiceEntityRepository
     }
 
 //    /**
-//     * @return AssoAddressEvent[] Returns an array of AssoAddressEvent objects
+//     * @return AssoAdressEvents[] Returns an array of AssoAdressEvents objects
 //     */
 //    public function findByExampleField($value): array
 //    {
@@ -54,7 +54,7 @@ class AssoAddressEventRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-//    public function findOneBySomeField($value): ?AssoAddressEvent
+//    public function findOneBySomeField($value): ?AssoAdressEvents
 //    {
 //        return $this->createQueryBuilder('a')
 //            ->andWhere('a.exampleField = :val')

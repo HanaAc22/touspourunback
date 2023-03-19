@@ -21,24 +21,19 @@ class ForumQuestions
     #[ORM\Column(length: 255)]
     private ?string $title = null;
 
-    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[ORM\Column(type: Types::TEXT)]
     private ?string $questions = null;
 
-    #[ORM\Column]
-    private ?\DateTimeImmutable $createdAt = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $author = null;
-
-    #[ORM\OneToMany(mappedBy: 'questions', targetEntity: ForumAnswers::class, orphanRemoval: true)]
-    private Collection $answers;
-
     #[ORM\ManyToOne(inversedBy: 'forumQuestions')]
-    private ?User $user = null;
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $author = null;
+
+    #[ORM\OneToMany(mappedBy: 'question', targetEntity: ForumAnswers::class)]
+    private Collection $forumAnswers;
 
     public function __construct()
     {
-        $this->answers = new ArrayCollection();
+        $this->forumAnswers = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -63,31 +58,19 @@ class ForumQuestions
         return $this->questions;
     }
 
-    public function setQuestions(?string $questions): self
+    public function setQuestions(string $questions): self
     {
         $this->questions = $questions;
 
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(\DateTimeImmutable $createdAt): self
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
-    }
-
-    public function getAuthor(): ?string
+    public function getAuthor(): ?User
     {
         return $this->author;
     }
 
-    public function setAuthor(string $author): self
+    public function setAuthor(?User $author): self
     {
         $this->author = $author;
 
@@ -97,41 +80,29 @@ class ForumQuestions
     /**
      * @return Collection<int, ForumAnswers>
      */
-    public function getAnswers(): Collection
+    public function getForumAnswers(): Collection
     {
-        return $this->answers;
+        return $this->forumAnswers;
     }
 
-    public function addAnswer(ForumAnswers $answer): self
+    public function addForumAnswer(ForumAnswers $forumAnswer): self
     {
-        if (!$this->answers->contains($answer)) {
-            $this->answers->add($answer);
-            $answer->setQuestions($this);
+        if (!$this->forumAnswers->contains($forumAnswer)) {
+            $this->forumAnswers->add($forumAnswer);
+            $forumAnswer->setQuestion($this);
         }
 
         return $this;
     }
 
-    public function removeAnswer(ForumAnswers $answer): self
+    public function removeForumAnswer(ForumAnswers $forumAnswer): self
     {
-        if ($this->answers->removeElement($answer)) {
+        if ($this->forumAnswers->removeElement($forumAnswer)) {
             // set the owning side to null (unless already changed)
-            if ($answer->getQuestions() === $this) {
-                $answer->setQuestions(null);
+            if ($forumAnswer->getQuestion() === $this) {
+                $forumAnswer->setQuestion(null);
             }
         }
-
-        return $this;
-    }
-
-    public function getUser(): ?User
-    {
-        return $this->user;
-    }
-
-    public function setUser(?User $user): self
-    {
-        $this->user = $user;
 
         return $this;
     }

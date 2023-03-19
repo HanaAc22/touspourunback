@@ -30,24 +30,22 @@ class Course
     #[ORM\Column(type: Types::TEXT)]
     private ?string $content = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(length: 255)]
     private ?string $picture = null;
 
-    #[ORM\ManyToOne(inversedBy: 'courses')]
-    private ?TeacherProfile $teacherProfile = null;
+    #[ORM\OneToOne(mappedBy: 'course', cascade: ['persist', 'remove'])]
+    private ?CourseStatus $courseStatus = null;
 
-    #[ORM\OneToOne(inversedBy: 'course', cascade: ['persist', 'remove'])]
-    private ?ContentStaus $status = null;
-
-    #[ORM\ManyToOne(inversedBy: 'courses')]
-    private ?CourseCategory $categories = null;
+    #[ORM\OneToMany(mappedBy: 'course', targetEntity: CourseCategories::class)]
+    private Collection $courseCategories;
 
     #[ORM\OneToMany(mappedBy: 'course', targetEntity: CourseComments::class)]
-    private Collection $comments;
+    private Collection $courseComments;
 
     public function __construct()
     {
-        $this->comments = new ArrayCollection();
+        $this->courseCategories = new ArrayCollection();
+        $this->courseComments = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -108,45 +106,56 @@ class Course
         return $this->picture;
     }
 
-    public function setPicture(?string $picture): self
+    public function setPicture(string $picture): self
     {
         $this->picture = $picture;
 
         return $this;
     }
 
-    public function getTeacherProfile(): ?TeacherProfile
+    public function getCourseStatus(): ?CourseStatus
     {
-        return $this->teacherProfile;
+        return $this->courseStatus;
     }
 
-    public function setTeacherProfile(?TeacherProfile $teacherProfile): self
+    public function setCourseStatus(CourseStatus $courseStatus): self
     {
-        $this->teacherProfile = $teacherProfile;
+        // set the owning side of the relation if necessary
+        if ($courseStatus->getCourse() !== $this) {
+            $courseStatus->setCourse($this);
+        }
+
+        $this->courseStatus = $courseStatus;
 
         return $this;
     }
 
-    public function getStatus(): ?ContentStaus
+    /**
+     * @return Collection<int, CourseCategories>
+     */
+    public function getCourseCategories(): Collection
     {
-        return $this->status;
+        return $this->courseCategories;
     }
 
-    public function setStatus(?ContentStaus $status): self
+    public function addCourseCategory(CourseCategories $courseCategory): self
     {
-        $this->status = $status;
+        if (!$this->courseCategories->contains($courseCategory)) {
+            $this->courseCategories->add($courseCategory);
+            $courseCategory->setCourse($this);
+        }
 
         return $this;
     }
 
-    public function getCategories(): ?CourseCategory
+    public function removeCourseCategory(CourseCategories $courseCategory): self
     {
-        return $this->categories;
-    }
-
-    public function setCategories(?CourseCategory $categories): self
-    {
-        $this->categories = $categories;
+        if ($this->courseCategories->removeElement($courseCategory)) {
+            // set the owning side to null (unless already changed)
+            if ($courseCategory->getCourse() === $this) {
+                $courseCategory->setCourse(null);
+            }
+        }
 
         return $this;
     }
@@ -154,27 +163,27 @@ class Course
     /**
      * @return Collection<int, CourseComments>
      */
-    public function getComments(): Collection
+    public function getCourseComments(): Collection
     {
-        return $this->comments;
+        return $this->courseComments;
     }
 
-    public function addComment(CourseComments $comment): self
+    public function addCourseComment(CourseComments $courseComment): self
     {
-        if (!$this->comments->contains($comment)) {
-            $this->comments->add($comment);
-            $comment->setCourse($this);
+        if (!$this->courseComments->contains($courseComment)) {
+            $this->courseComments->add($courseComment);
+            $courseComment->setCourse($this);
         }
 
         return $this;
     }
 
-    public function removeComment(CourseComments $comment): self
+    public function removeCourseComment(CourseComments $courseComment): self
     {
-        if ($this->comments->removeElement($comment)) {
+        if ($this->courseComments->removeElement($courseComment)) {
             // set the owning side to null (unless already changed)
-            if ($comment->getCourse() === $this) {
-                $comment->setCourse(null);
+            if ($courseComment->getCourse() === $this) {
+                $courseComment->setCourse(null);
             }
         }
 

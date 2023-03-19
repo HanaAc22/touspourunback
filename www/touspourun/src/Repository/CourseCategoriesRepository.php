@@ -2,26 +2,26 @@
 
 namespace App\Repository;
 
-use App\Entity\CourseCategory;
+use App\Entity\CourseCategories;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<CourseCategory>
+ * @extends ServiceEntityRepository<CourseCategories>
  *
- * @method CourseCategory|null find($id, $lockMode = null, $lockVersion = null)
- * @method CourseCategory|null findOneBy(array $criteria, array $orderBy = null)
- * @method CourseCategory[]    findAll()
- * @method CourseCategory[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method CourseCategories|null find($id, $lockMode = null, $lockVersion = null)
+ * @method CourseCategories|null findOneBy(array $criteria, array $orderBy = null)
+ * @method CourseCategories[]    findAll()
+ * @method CourseCategories[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class CourseCategoryRepository extends ServiceEntityRepository
+class CourseCategoriesRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, CourseCategory::class);
+        parent::__construct($registry, CourseCategories::class);
     }
 
-    public function save(CourseCategory $entity, bool $flush = false): void
+    public function save(CourseCategories $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
 
@@ -30,7 +30,7 @@ class CourseCategoryRepository extends ServiceEntityRepository
         }
     }
 
-    public function remove(CourseCategory $entity, bool $flush = false): void
+    public function remove(CourseCategories $entity, bool $flush = false): void
     {
         $this->getEntityManager()->remove($entity);
 
@@ -40,7 +40,7 @@ class CourseCategoryRepository extends ServiceEntityRepository
     }
 
 //    /**
-//     * @return CourseCategory[] Returns an array of CourseCategory objects
+//     * @return CourseCategories[] Returns an array of CourseCategories objects
 //     */
 //    public function findByExampleField($value): array
 //    {
@@ -54,7 +54,7 @@ class CourseCategoryRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-//    public function findOneBySomeField($value): ?CourseCategory
+//    public function findOneBySomeField($value): ?CourseCategories
 //    {
 //        return $this->createQueryBuilder('c')
 //            ->andWhere('c.exampleField = :val')

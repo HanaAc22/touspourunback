@@ -2,26 +2,26 @@
 
 namespace App\Repository;
 
-use App\Entity\ParentProfile;
+use App\Entity\Profil;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<ParentProfile>
+ * @extends ServiceEntityRepository<Profil>
  *
- * @method ParentProfile|null find($id, $lockMode = null, $lockVersion = null)
- * @method ParentProfile|null findOneBy(array $criteria, array $orderBy = null)
- * @method ParentProfile[]    findAll()
- * @method ParentProfile[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Profil|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Profil|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Profil[]    findAll()
+ * @method Profil[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class ParentProfilRepository extends ServiceEntityRepository
+class ProfilRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, ParentProfile::class);
+        parent::__construct($registry, Profil::class);
     }
 
-    public function save(ParentProfile $entity, bool $flush = false): void
+    public function save(Profil $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
 
@@ -30,7 +30,7 @@ class ParentProfilRepository extends ServiceEntityRepository
         }
     }
 
-    public function remove(ParentProfile $entity, bool $flush = false): void
+    public function remove(Profil $entity, bool $flush = false): void
     {
         $this->getEntityManager()->remove($entity);
 
@@ -40,7 +40,7 @@ class ParentProfilRepository extends ServiceEntityRepository
     }
 
 //    /**
-//     * @return ParentProfile[] Returns an array of ParentProfile objects
+//     * @return Profil[] Returns an array of Profil objects
 //     */
 //    public function findByExampleField($value): array
 //    {
@@ -54,7 +54,7 @@ class ParentProfilRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-//    public function findOneBySomeField($value): ?ParentProfile
+//    public function findOneBySomeField($value): ?Profil
 //    {
 //        return $this->createQueryBuilder('p')
 //            ->andWhere('p.exampleField = :val')

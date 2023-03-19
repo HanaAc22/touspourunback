@@ -20,19 +20,13 @@ class AssoEvents
     private ?string $event = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $eventDate = null;
+    private ?\DateTimeInterface $date = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?bool $presential = null;
-
-    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[ORM\Column(type: Types::TEXT)]
     private ?string $description = null;
 
-    #[ORM\ManyToOne(inversedBy: 'events')]
-    private ?AssoProfile $assoProfile = null;
-
-    #[ORM\OneToOne(inversedBy: 'assoEvents', cascade: ['persist', 'remove'])]
-    private ?AssoAddressEvent $address = null;
+    #[ORM\ManyToOne(inversedBy: 'event')]
+    private ?AssoAdressEvents $assoAdressEvents = null;
 
     public function getId(): ?int
     {
@@ -51,26 +45,14 @@ class AssoEvents
         return $this;
     }
 
-    public function getEventDate(): ?\DateTimeInterface
+    public function getDate(): ?\DateTimeInterface
     {
-        return $this->eventDate;
+        return $this->date;
     }
 
-    public function setEventDate(\DateTimeInterface $eventDate): self
+    public function setDate(\DateTimeInterface $date): self
     {
-        $this->eventDate = $eventDate;
-
-        return $this;
-    }
-
-    public function isPresential(): ?bool
-    {
-        return $this->presential;
-    }
-
-    public function setPresential(?bool $presential): self
-    {
-        $this->presential = $presential;
+        $this->date = $date;
 
         return $this;
     }
@@ -80,33 +62,21 @@ class AssoEvents
         return $this->description;
     }
 
-    public function setDescription(?string $description): self
+    public function setDescription(string $description): self
     {
         $this->description = $description;
 
         return $this;
     }
 
-    public function getAssoProfile(): ?AssoProfile
+    public function getAssoAdressEvents(): ?AssoAdressEvents
     {
-        return $this->assoProfile;
+        return $this->assoAdressEvents;
     }
 
-    public function setAssoProfile(?AssoProfile $assoProfile): self
+    public function setAssoAdressEvents(?AssoAdressEvents $assoAdressEvents): self
     {
-        $this->assoProfile = $assoProfile;
-
-        return $this;
-    }
-
-    public function getAddress(): ?AssoAddressEvent
-    {
-        return $this->address;
-    }
-
-    public function setAddress(?AssoAddressEvent $address): self
-    {
-        $this->address = $address;
+        $this->assoAdressEvents = $assoAdressEvents;
 
         return $this;
     }

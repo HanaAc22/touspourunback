@@ -16,16 +16,17 @@ class CourseComments
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[ORM\Column(type: Types::TEXT)]
     private ?string $content = null;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
-    #[ORM\ManyToOne(inversedBy: 'courseComments')]
-    private ?ParentProfile $author = null;
+    #[ORM\Column(length: 255)]
+    private ?string $author = null;
 
-    #[ORM\ManyToOne(inversedBy: 'comments')]
+    #[ORM\ManyToOne(inversedBy: 'courseComments')]
+    #[ORM\JoinColumn(nullable: false)]
     private ?Course $course = null;
 
     public function getId(): ?int
@@ -38,7 +39,7 @@ class CourseComments
         return $this->content;
     }
 
-    public function setContent(?string $content): self
+    public function setContent(string $content): self
     {
         $this->content = $content;
 
@@ -57,12 +58,12 @@ class CourseComments
         return $this;
     }
 
-    public function getAuthor(): ?ParentProfile
+    public function getAuthor(): ?string
     {
         return $this->author;
     }
 
-    public function setAuthor(?ParentProfile $author): self
+    public function setAuthor(string $author): self
     {
         $this->author = $author;
 
