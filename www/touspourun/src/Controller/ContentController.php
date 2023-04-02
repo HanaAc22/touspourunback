@@ -4,8 +4,8 @@ namespace App\Controller;
 
 use App\Entity\Course;
 use App\Form\ContentType;
-use DateTime;
-use DateTimeImmutable;
+use App\Form\Model\ContentFormModel;
+use App\Repository\CourseRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use  \Symfony\Component\HttpFoundation\Response;
@@ -13,7 +13,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-#[Route('/course', name: 'course')]
+#[Route('/course', name: 'course_')]
 class ContentController extends AbstractController
 {
     #[Route('/create', name: 'create')]
@@ -24,16 +24,16 @@ class ContentController extends AbstractController
         $form = $this->createForm(ContentType::class);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()){
-
+        if ($form->isSubmitted() && $form->isValid())
+        {
             $courseModel = $form->getData();
 
             $course
-                ->setTitle($courseModel->title)
-                ->setPicture($courseModel->picture)
-                ->setContent($courseModel->content)
-                ->setCreatedAt($courseModel->createdAt)
-                ->setUpdatedAt($courseModel->updatedAt)
+                ->setTitle($courseModel->getTitle())
+                ->setPicture($courseModel->getPicture())
+                ->setContent($courseModel->getContent())
+                ->setCreatedAt($courseModel->getCreatedAt())
+                ->setUpdatedAt($courseModel->getUpdatedAt())
             ;
 
             $entityManager->persist($course);
@@ -43,11 +43,44 @@ class ContentController extends AbstractController
             return new Response($successMessage);
         }
 
-            return $this->render('Content/createForm.html.twig', [
+            return $this->render('Content/createContent.html.twig', [
                 'contentCreateForm' => $form->createView()
             ]);
+    }
 
+    #[Route('/update/{id}', name: '_update')]
+    public  function edit($id, EntityManagerInterface $entityManager, Request $request, TranslatorInterface $translator): Response
+    {
+        $course = $entityManager->getRepository(Course::class)->find($id);
 
+        $courseModel = new ContentFormModel($course);
+
+        $form = $this->createForm(ContentType::class, $courseModel);
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid())
+        {
+            $courseModel = $form->getData();
+
+            $course
+                ->setTitle($courseModel->getTitle())
+                ->setPicture($courseModel->getPicture())
+                ->setContent($courseModel->getContent())
+                ->setCreatedAt($courseModel->getCreatedAt())
+                ->setUpdatedAt($courseModel->getUpdatedAt())
+            ;
+
+            $entityManager->persist($course);
+            $entityManager->flush();
+
+            $successMessage = $translator->trans('course.update.success');
+            return new Response($successMessage);
+
+        }
+
+        return $this->render('Content/updateContent.html.twig',[
+            'updateContentForm' => $form->createView(),
+        ]);
     }
 
 
