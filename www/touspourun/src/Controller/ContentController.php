@@ -10,6 +10,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use  \Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -17,7 +18,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class ContentController extends AbstractController
 {
     #[Route('/create', name: 'create')]
-    public function create(TranslatorInterface $translator, Request $request, EntityManagerInterface $entityManager): Response
+    public function create(TranslatorInterface $translator, Request $request, MessageBusInterface $messageBus): Response
     {
         $course = new Course();
 
@@ -26,30 +27,19 @@ class ContentController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid())
         {
-            $courseModel = $form->getData();
-
-            $course
-                ->setTitle($courseModel->getTitle())
-                ->setPicture($courseModel->getPicture())
-                ->setContent($courseModel->getContent())
-                ->setCreatedAt($courseModel->getCreatedAt())
-                ->setUpdatedAt($courseModel->getUpdatedAt())
-            ;
-
-            $entityManager->persist($course);
-            $entityManager->flush();
+            $message = new Course();
+            $messageBus->dispatch($message);
 
             $successMessage = $translator->trans('course.create.success');
             return new Response($successMessage);
         }
-
             return $this->render('Content/createContent.html.twig', [
                 'contentCreateForm' => $form->createView()
             ]);
     }
 
     #[Route('/update/{id}', name: '_update')]
-    public  function edit($id, EntityManagerInterface $entityManager, Request $request, TranslatorInterface $translator): Response
+    public  function edit($id, Request $request, TranslatorInterface $translator, EntityManagerInterface $entityManager, MessageBusInterface $messageBus): Response
     {
         $course = $entityManager->getRepository(Course::class)->find($id);
 
@@ -60,22 +50,13 @@ class ContentController extends AbstractController
 
         if($form->isSubmitted() && $form->isValid())
         {
-            $courseModel = $form->getData();
+            $form->getData();
 
-            $course
-                ->setTitle($courseModel->getTitle())
-                ->setPicture($courseModel->getPicture())
-                ->setContent($courseModel->getContent())
-                ->setCreatedAt($courseModel->getCreatedAt())
-                ->setUpdatedAt($courseModel->getUpdatedAt())
-            ;
-
-            $entityManager->persist($course);
-            $entityManager->flush();
+            $message = new Course();
+            $messageBus->dispatch($message);
 
             $successMessage = $translator->trans('course.update.success');
             return new Response($successMessage);
-
         }
 
         return $this->render('Content/updateContent.html.twig',[

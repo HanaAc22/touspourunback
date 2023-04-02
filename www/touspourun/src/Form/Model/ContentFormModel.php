@@ -22,6 +22,7 @@ class ContentFormModel
     public function __construct(?Course $course = null)
     {
         $this->createdAt = new DateTimeImmutable('now');
+        $this->updatedAt = new DateTimeImmutable('now');
 
         if($course){
             $this->title = $course->getTitle();
