@@ -1,0 +1,14 @@
+-
+  email: test@test.fr
+  password: password
+  roles: [ROLE_PARENT]
+
+-
+  email: test1@test.fr
+  password: password
+  roles: [ROLE_Teacher]
+
+-
+  email: test2@test.fr
+  password: password
+  roles: [ROLE_ASSO]

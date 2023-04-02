@@ -32,13 +32,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Profil::class)]
     private Collection $profil;
 
-    #[ORM\OneToMany(mappedBy: 'author', targetEntity: ForumQuestions::class)]
-    private Collection $forumQuestions;
-
     public function __construct()
     {
         $this->profil = new ArrayCollection();
-        $this->forumQuestions = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -135,36 +131,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($profil->getUser() === $this) {
                 $profil->setUser(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, ForumQuestions>
-     */
-    public function getForumQuestions(): Collection
-    {
-        return $this->forumQuestions;
-    }
-
-    public function addForumQuestion(ForumQuestions $forumQuestion): self
-    {
-        if (!$this->forumQuestions->contains($forumQuestion)) {
-            $this->forumQuestions->add($forumQuestion);
-            $forumQuestion->setAuthor($this);
-        }
-
-        return $this;
-    }
-
-    public function removeForumQuestion(ForumQuestions $forumQuestion): self
-    {
-        if ($this->forumQuestions->removeElement($forumQuestion)) {
-            // set the owning side to null (unless already changed)
-            if ($forumQuestion->getAuthor() === $this) {
-                $forumQuestion->setAuthor(null);
             }
         }
 
