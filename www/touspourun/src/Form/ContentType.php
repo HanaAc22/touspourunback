@@ -2,13 +2,13 @@
 
 namespace App\Form;
 
-use App\Entity\Course;
 use App\Form\Model\ContentFormModel;
-use Doctrine\DBAL\Types\TextType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -17,9 +17,12 @@ class ContentType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('title')
-            ->add('picture')
-            ->add('content')
+            ->add('title', TextType::class)
+            ->add('picture', FileType::class,[
+                'required' => false,
+                'mapped' => false,
+            ])
+            ->add('content', TextareaType::class)
             ->add('createdAt', DateType::class, [
                     'widget' => 'choice',
                     'input'  => 'datetime_immutable'
@@ -34,5 +37,4 @@ class ContentType extends AbstractType
             'data_class' => ContentFormModel::class
         ]);
     }
-
 }

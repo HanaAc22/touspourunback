@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\Course;
 
+use App\Command\Course\Message\CourseCommand;
 use App\Entity\Course;
 use App\Form\ContentType;
 use App\Form\Model\ContentFormModel;
-use App\Repository\CourseRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\Request;
-use  \Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -52,8 +52,7 @@ class ContentController extends AbstractController
         {
             $form->getData();
 
-            $message = new Course();
-            $messageBus->dispatch($message);
+            $messageBus->dispatch(new CourseCommand($course, $courseModel));
 
             $successMessage = $translator->trans('course.update.success');
             return new Response($successMessage);
@@ -63,6 +62,4 @@ class ContentController extends AbstractController
             'updateContentForm' => $form->createView(),
         ]);
     }
-
-
 }

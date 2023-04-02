@@ -1,0 +1,10 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    <h1>Courses</h1>
+
+    {% for course in courses %}
+        <p>{{ course.title }}</p>
+        <div>{{ course.picture }}</div>
+        <div>{{ course.getContent }}</div>
+    {% endfor %}
+{% endblock %}

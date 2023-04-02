@@ -2,6 +2,7 @@
 
 namespace App\Command\Course\MessageHandler;
 
+use App\Command\Course\Message\CourseCommand;
 use App\Entity\Course;
 use App\Form\Model\ContentFormModel;
 use Doctrine\ORM\EntityManagerInterface;
@@ -9,20 +10,22 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class CourseCommandHandler implements MessageHandlerInterface
 {
-    public function __construct(
-        private readonly EntityManagerInterface $entityManager,
-        private readonly ContentFormModel $courseModel
-    ){
-
+    private EntityManagerInterface $entityManager;
+    public function __construct(EntityManagerInterface $entityManager){
+        $this->entityManager = $entityManager;
     }
-    public function __invoke(Course $course): void
+
+    public function __invoke(CourseCommand $command): void
     {
+        $course = $command->getCourse();
+        $courseModel = $command->getCourseModel();
+
         $course
-            ->setTitle($this->courseModel->getTitle())
-            ->setPicture($this->courseModel->getPicture())
-            ->setContent($this->courseModel->getContent())
-            ->setCreatedAt($this->courseModel->getCreatedAt())
-            ->setUpdatedAt($this->courseModel->getUpdatedAt())
+            ->setTitle($courseModel->getTitle())
+            ->setPicture($courseModel->getPicture())
+            ->setContent($courseModel->getContent())
+            ->setCreatedAt($courseModel->getCreatedAt())
+            ->setUpdatedAt($courseModel->getUpdatedAt())
         ;
 
         $this->entityManager->persist($course);
