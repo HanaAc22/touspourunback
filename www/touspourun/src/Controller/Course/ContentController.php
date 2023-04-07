@@ -20,15 +20,17 @@ class ContentController extends AbstractController
     #[Route('/create', name: 'create')]
     public function create(TranslatorInterface $translator, Request $request, MessageBusInterface $messageBus): Response
     {
-        $course = new Course();
-
         $form = $this->createForm(ContentType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid())
         {
-            $message = new Course();
-            $messageBus->dispatch($message);
+            $course = new Course();
+            $courseModel = new ContentFormModel();
+
+            $courseModel = $form->getData();
+
+            $messageBus->dispatch(new CourseCommand($course, $courseModel));
 
             $successMessage = $translator->trans('course.create.success');
             return new Response($successMessage);

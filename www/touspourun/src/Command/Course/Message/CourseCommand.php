@@ -8,7 +8,7 @@ use App\Form\Model\ContentFormModel;
 class CourseCommand
 {
     private Course $course;
-    private ContentFormModel $courseModel;
+    private readonly ContentFormModel $courseModel;
 
     public function __construct(Course $course, ContentFormModel $courseModel)
     {

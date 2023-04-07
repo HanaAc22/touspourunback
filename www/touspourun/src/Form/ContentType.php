@@ -21,6 +21,8 @@ class ContentType extends AbstractType
             ->add('picture', FileType::class,[
                 'required' => false,
                 'mapped' => false,
+                'data_class' => null,
+                'label' => 'Upload an image',
             ])
             ->add('content', TextareaType::class)
             ->add('createdAt', DateType::class, [

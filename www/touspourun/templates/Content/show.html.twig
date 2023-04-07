@@ -3,8 +3,16 @@
     <h1>Courses</h1>
 
     {% for course in courses %}
-        <p>{{ course.title }}</p>
-        <div>{{ course.picture }}</div>
-        <div>{{ course.getContent }}</div>
-    {% endfor %}
+        <div class="card">
+                <div class="card-body">
+                        <h5 class="card-title">{{ course.title }}</h5>
+                        {% if course.picture is not null %}
+                                <img src="{{ asset('uploads/' ~ course.picture) }}" alt="Uploaded Picture">
+                        {% endif %}
+                        <p class="card-text">{{ course.content }}</p>
+                        <p class="card-text">{{ course.createdAt|date('Y-m-d H:i:s') }}</p>
+                </div>
+        </div>
+
+            {% endfor %}
 {% endblock %}
