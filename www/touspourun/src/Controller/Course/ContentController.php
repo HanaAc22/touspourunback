@@ -12,13 +12,15 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[Route('/course', name: 'course_')]
 class ContentController extends AbstractController
 {
+    use PictureExtentionTrait;
     #[Route('/create', name: 'create')]
-    public function create(TranslatorInterface $translator, Request $request, MessageBusInterface $messageBus): Response
+    public function create(SluggerInterface $slugger,TranslatorInterface $translator, Request $request, MessageBusInterface $messageBus): Response
     {
         $form = $this->createForm(ContentType::class);
         $form->handleRequest($request);
@@ -26,9 +28,16 @@ class ContentController extends AbstractController
         if ($form->isSubmitted() && $form->isValid())
         {
             $course = new Course();
+
             $courseModel = new ContentFormModel();
 
             $courseModel = $form->getData();
+            $imageFile = $form->get('picture')->getData();
+
+            if ($imageFile) {
+                $newFilename = $this->uploadFile($imageFile, $slugger);
+                $course->setPicture($newFilename);
+            }
 
             $messageBus->dispatch(new CourseCommand($course, $courseModel));
 
@@ -41,7 +50,7 @@ class ContentController extends AbstractController
     }
 
     #[Route('/update/{id}', name: '_update')]
-    public  function edit($id, Request $request, TranslatorInterface $translator, EntityManagerInterface $entityManager, MessageBusInterface $messageBus): Response
+    public  function edit($id, Request $request, TranslatorInterface $translator, EntityManagerInterface $entityManager, SluggerInterface $slugger ,MessageBusInterface $messageBus): Response
     {
         $course = $entityManager->getRepository(Course::class)->find($id);
 
@@ -54,6 +63,13 @@ class ContentController extends AbstractController
         {
             $form->getData();
 
+            $imageFile = $form->get('picture')->getData();
+
+            if ($imageFile) {
+                $newFilename = $this->uploadFile($imageFile, $slugger);
+                $course->setPicture($newFilename);
+            }
+
             $messageBus->dispatch(new CourseCommand($course, $courseModel));
 
             $successMessage = $translator->trans('course.update.success');
@@ -64,4 +80,5 @@ class ContentController extends AbstractController
             'updateContentForm' => $form->createView(),
         ]);
     }
+
 }

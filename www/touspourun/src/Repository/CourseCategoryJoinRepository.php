@@ -2,26 +2,26 @@
 
 namespace App\Repository;
 
-use App\Entity\CourseComments;
+use App\Entity\CourseCategoryJoin;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<CourseComments>
+ * @extends ServiceEntityRepository<CourseCategoryJoin>
  *
- * @method CourseComments|null find($id, $lockMode = null, $lockVersion = null)
- * @method CourseComments|null findOneBy(array $criteria, array $orderBy = null)
- * @method CourseComments[]    findAll()
- * @method CourseComments[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method CourseCategoryJoin|null find($id, $lockMode = null, $lockVersion = null)
+ * @method CourseCategoryJoin|null findOneBy(array $criteria, array $orderBy = null)
+ * @method CourseCategoryJoin[]    findAll()
+ * @method CourseCategoryJoin[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class CourseCommentsRepository extends ServiceEntityRepository
+class CourseCategoryJoinRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, CourseComments::class);
+        parent::__construct($registry, CourseCategoryJoin::class);
     }
 
-    public function save(CourseComments $entity, bool $flush = false): void
+    public function save(CourseCategoryJoin $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
 
@@ -30,7 +30,7 @@ class CourseCommentsRepository extends ServiceEntityRepository
         }
     }
 
-    public function remove(CourseComments $entity, bool $flush = false): void
+    public function remove(CourseCategoryJoin $entity, bool $flush = false): void
     {
         $this->getEntityManager()->remove($entity);
 
@@ -40,7 +40,7 @@ class CourseCommentsRepository extends ServiceEntityRepository
     }
 
 //    /**
-//     * @return CourseComments[] Returns an array of CourseComments objects
+//     * @return CourseCategoryJoin[] Returns an array of CourseCategoryJoin objects
 //     */
 //    public function findByExampleField($value): array
 //    {
@@ -54,7 +54,7 @@ class CourseCommentsRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-//    public function findOneBySomeField($value): ?CourseComments
+//    public function findOneBySomeField($value): ?CourseCategoryJoin
 //    {
 //        return $this->createQueryBuilder('c')
 //            ->andWhere('c.exampleField = :val')

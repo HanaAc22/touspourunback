@@ -8,7 +8,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-
 #[ORM\Entity(repositoryClass: CourseRepository::class)]
 #[ApiResource]
 class Course
@@ -21,31 +20,24 @@ class Course
     #[ORM\Column(length: 255)]
     private ?string $title = null;
 
-    #[ORM\Column]
-    private ?\DateTimeImmutable $createdAt = null;
-
-    #[ORM\Column]
-    private ?\DateTimeImmutable $updatedAt = null;
-
     #[ORM\Column(type: Types::TEXT)]
     private ?string $content = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column]
+    private ?\DateTimeImmutable $createdAt = null;
+
+    #[ORM\Column(nullable: true)]
     private ?string $picture = null;
 
-    #[ORM\OneToOne(mappedBy: 'course', cascade: ['persist', 'remove'])]
-    private ?CourseStatus $courseStatus = null;
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $updatedAt = null;
 
-    #[ORM\OneToMany(mappedBy: 'course', targetEntity: CourseCategories::class)]
-    private Collection $courseCategories;
-
-    #[ORM\OneToMany(mappedBy: 'course', targetEntity: CourseComments::class)]
-    private Collection $courseComments;
+    #[ORM\OneToMany(mappedBy: 'course', targetEntity: CourseCategoryJoin::class)]
+    private Collection $courseJoin;
 
     public function __construct()
     {
-        $this->courseCategories = new ArrayCollection();
-        $this->courseComments = new ArrayCollection();
+        $this->courseJoin = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -77,17 +69,6 @@ class Course
         return $this;
     }
 
-    public function getUpdatedAt(): ?\DateTimeImmutable
-    {
-        return $this->updatedAt;
-    }
-
-    public function setUpdatedAt(\DateTimeImmutable $updatedAt): self
-    {
-        $this->updatedAt = $updatedAt;
-
-        return $this;
-    }
 
     public function getContent(): ?string
     {
@@ -101,92 +82,60 @@ class Course
         return $this;
     }
 
-    public function getPicture(): ?string
-    {
-        return $this->picture;
-    }
-
     public function setPicture(string $picture): self
     {
         $this->picture = $picture;
 
+        $this->updatedAt = new \DateTimeImmutable();
+
         return $this;
     }
 
-    public function getCourseStatus(): ?CourseStatus
+    public function getPicture(): string
     {
-        return $this->courseStatus;
+        return $this->picture;
     }
 
-    public function setCourseStatus(CourseStatus $courseStatus): self
+    public function getUpdatedAt(): ?\DateTimeImmutable
     {
-        // set the owning side of the relation if necessary
-        if ($courseStatus->getCourse() !== $this) {
-            $courseStatus->setCourse($this);
-        }
+        return $this->updatedAt;
+    }
 
-        $this->courseStatus = $courseStatus;
+    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): self
+    {
+        $this->updatedAt = $updatedAt;
 
         return $this;
     }
 
     /**
-     * @return Collection<int, CourseCategories>
+     * @return Collection<int, CourseCategoryJoin>
      */
-    public function getCourseCategories(): Collection
+    public function getCourseJoin(): Collection
     {
-        return $this->courseCategories;
+        return $this->courseJoin;
     }
 
-    public function addCourseCategory(CourseCategories $courseCategory): self
+    public function addCourseJoin(CourseCategoryJoin $courseJoin): self
     {
-        if (!$this->courseCategories->contains($courseCategory)) {
-            $this->courseCategories->add($courseCategory);
-            $courseCategory->setCourse($this);
+        if (!$this->courseJoin->contains($courseJoin)) {
+            $this->courseJoin->add($courseJoin);
+            $courseJoin->setCourse($this);
         }
 
         return $this;
     }
 
-    public function removeCourseCategory(CourseCategories $courseCategory): self
+    public function removeCourseJoin(CourseCategoryJoin $courseJoin): self
     {
-        if ($this->courseCategories->removeElement($courseCategory)) {
+        if ($this->courseJoin->removeElement($courseJoin)) {
             // set the owning side to null (unless already changed)
-            if ($courseCategory->getCourse() === $this) {
-                $courseCategory->setCourse(null);
+            if ($courseJoin->getCourse() === $this) {
+                $courseJoin->setCourse(null);
             }
         }
 
         return $this;
     }
 
-    /**
-     * @return Collection<int, CourseComments>
-     */
-    public function getCourseComments(): Collection
-    {
-        return $this->courseComments;
-    }
-
-    public function addCourseComment(CourseComments $courseComment): self
-    {
-        if (!$this->courseComments->contains($courseComment)) {
-            $this->courseComments->add($courseComment);
-            $courseComment->setCourse($this);
-        }
-
-        return $this;
-    }
-
-    public function removeCourseComment(CourseComments $courseComment): self
-    {
-        if ($this->courseComments->removeElement($courseComment)) {
-            // set the owning side to null (unless already changed)
-            if ($courseComment->getCourse() === $this) {
-                $courseComment->setCourse(null);
-            }
-        }
-
-        return $this;
-    }
 }

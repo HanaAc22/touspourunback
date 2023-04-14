@@ -19,10 +19,9 @@ class ContentType extends AbstractType
         $builder
             ->add('title', TextType::class)
             ->add('picture', FileType::class,[
-                'required' => false,
-                'mapped' => false,
-                'data_class' => null,
                 'label' => 'Upload an image',
+                'required' => false,
+                'data_class' => null,
             ])
             ->add('content', TextareaType::class)
             ->add('createdAt', DateType::class, [

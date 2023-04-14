@@ -5,13 +5,14 @@ namespace App\Form\Model;
 use App\Entity\Course;
 use DateTimeImmutable;
 use Symfony\Component\Validator\Constraints as Assert;
+
 class ContentFormModel
 {
     #[Assert\NotBlank]
     private string $title = 'title';
 
     #[Assert\NotBlank]
-    private string $picture = 'picture';
+    private ?string $picture = null;
 
     #[Assert\NotBlank]
     private string $content = 'content';
@@ -48,18 +49,12 @@ class ContentFormModel
         $this->title = $title;
     }
 
-    /**
-     * @return string
-     */
-    public function getPicture(): string
+    public function getPicture(): ?string
     {
         return $this->picture;
     }
 
-    /**
-     * @param string $picture
-     */
-    public function setPicture(string $picture): void
+    public function setPicture(?string $picture): void
     {
         $this->picture = $picture;
     }
