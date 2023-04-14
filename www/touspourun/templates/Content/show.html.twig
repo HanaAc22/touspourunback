@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    <h1>Courses</h1>
+{#    <img src="{{ asset('images/tree.jpg') }}" alt="pic">#}
+
+    {% for course in courses %}
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">{{ course.title }}</h5>
+                {% if course.picture is not null %}
+                    <img src="{{ asset("uploads/images/" ~ course.picture)}}" alt="{{ course.title }}" style="width: 20%; height: 20%">
+                {% endif %}
+                <p class="card-text">{{ course.content }}</p>
+                <p class="card-text">{{ course.createdAt|date('Y-m-d H:i:s') }}</p>
+            </div>
+        </div>
+    {% endfor %}
+{% endblock %}
