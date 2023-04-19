@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\Course;
+namespace App\Controller\CourseController\Course;
 
 use App\Entity\Course;
 use Doctrine\ORM\EntityManagerInterface;
@@ -16,7 +16,7 @@ class ShowController extends AbstractController
     {
         $courses = $entityManager->getRepository(Course::class)->findAll();
 
-        return $this->render('Content/show.html.twig',[
+        return $this->render('courses/course_content/show.html.twig',[
             'courses' => $courses
         ]);
     }

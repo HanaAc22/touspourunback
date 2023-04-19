@@ -4,8 +4,6 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\CourseCategoryRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CourseCategoryRepository::class)]
@@ -17,60 +15,37 @@ class CourseCategory
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $name = null;
+    #[ORM\ManyToOne(inversedBy: 'courses')]
+    private ?Category $category = null;
 
-    #[ORM\OneToMany(mappedBy: 'courseCategory', targetEntity: CourseCategoryJoin::class)]
-    private Collection $categoryJoin;
-
-    public function __construct()
-    {
-        $this->categoryJoin = new ArrayCollection();
-    }
+    #[ORM\ManyToOne(inversedBy: 'categories')]
+    private ?Course $course = null;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getName(): ?string
+    public function getCategory(): ?Category
     {
-        return $this->name;
+        return $this->category;
     }
 
-    public function setName(?string $name): self
+    public function setCategory(?Category $category): self
     {
-        $this->name = $name;
+        $this->category = $category;
 
         return $this;
     }
 
-    /**
-     * @return Collection<int, CourseCategoryJoin>
-     */
-    public function getCategoryJoin(): Collection
+    public function getCourse(): ?Course
     {
-        return $this->categoryJoin;
+        return $this->course;
     }
 
-    public function addCategoryJoin(CourseCategoryJoin $categoryJoin): self
+    public function setCourse(?Course $course): self
     {
-        if (!$this->categoryJoin->contains($categoryJoin)) {
-            $this->categoryJoin->add($categoryJoin);
-            $categoryJoin->setCourseCategory($this);
-        }
-
-        return $this;
-    }
-
-    public function removeCategoryJoin(CourseCategoryJoin $categoryJoin): self
-    {
-        if ($this->categoryJoin->removeElement($categoryJoin)) {
-            // set the owning side to null (unless already changed)
-            if ($categoryJoin->getCourseCategory() === $this) {
-                $categoryJoin->setCourseCategory(null);
-            }
-        }
+        $this->course = $course;
 
         return $this;
     }

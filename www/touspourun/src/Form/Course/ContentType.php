@@ -1,8 +1,10 @@
 <?php
 
-namespace App\Form;
+namespace App\Form\Course;
 
+use App\Entity\CourseCategory;
 use App\Form\Model\ContentFormModel;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
@@ -27,6 +29,13 @@ class ContentType extends AbstractType
             ->add('createdAt', DateType::class, [
                     'widget' => 'choice',
                     'input'  => 'datetime_immutable'
+            ])
+            ->add('category', EntityType::class, [
+                'class' => CourseCategory::class,
+                'choice_label' => 'name',
+                'multiple' => true,
+                'expanded' => true,
+                'required' => false,
             ])
             ->add('Submit', SubmitType::class)
         ;

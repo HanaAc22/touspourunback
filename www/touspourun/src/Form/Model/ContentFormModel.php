@@ -3,6 +3,7 @@
 namespace App\Form\Model;
 
 use App\Entity\Course;
+use App\Entity\CourseCategory;
 use DateTimeImmutable;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -19,6 +20,8 @@ class ContentFormModel
 
     private DateTimeImmutable $createdAt;
     private ?DateTimeImmutable $updatedAt;
+
+    private CourseCategory $category;
 
     public function __construct(?Course $course = null)
     {
@@ -106,4 +109,22 @@ class ContentFormModel
     {
         $this->updatedAt = $updatedAt;
     }
+
+    /**
+     * @return CourseCategory
+     */
+    public function getCategory(): CourseCategory
+    {
+        return $this->category;
+    }
+
+    /**
+     * @param CourseCategory $category
+     */
+    public function setCategory(CourseCategory $category): void
+    {
+        $this->category = $category;
+    }
+
+
 }
