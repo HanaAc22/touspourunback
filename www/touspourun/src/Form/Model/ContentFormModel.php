@@ -2,40 +2,51 @@
 
 namespace App\Form\Model;
 
+use ApiPlatform\Metadata\ApiProperty;
+use App\Entity\Category;
 use App\Entity\Course;
-use App\Entity\CourseCategory;
 use DateTimeImmutable;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class ContentFormModel
 {
     #[Assert\NotBlank]
-    private string $title = 'title';
+    private string $title = '';
 
     #[Assert\NotBlank]
     private ?string $picture = null;
 
     #[Assert\NotBlank]
-    private string $content = 'content';
+    private string $content = '';
 
     private DateTimeImmutable $createdAt;
     private ?DateTimeImmutable $updatedAt;
 
-    private CourseCategory $category;
+    /**
+     * @var Collection
+     */
+    private Collection $categories;
+
+    private readonly Category $category;
+    private string $name;
 
     public function __construct(?Course $course = null)
     {
         $this->createdAt = new DateTimeImmutable('now');
         $this->updatedAt = new DateTimeImmutable('now');
+        $this->categories = new ArrayCollection();
 
-        if($course){
+        if ($course) {
             $this->title = $course->getTitle();
             $this->picture = $course->getPicture();
             $this->content = $course->getContent();
+            $this->categories = $course->getCategories();
             $this->updatedAt = new DateTimeImmutable('now');
         }
-    }
 
+    }
     /**
      * @return string
      */
@@ -111,20 +122,39 @@ class ContentFormModel
     }
 
     /**
-     * @return CourseCategory
+     * @return string
      */
-    public function getCategory(): CourseCategory
+    public function getCategory(): string
     {
-        return $this->category;
+        return $this->category->getName();
     }
 
     /**
-     * @param CourseCategory $category
+     * @param Category $category
      */
-    public function setCategory(CourseCategory $category): void
+    public function setCategory(Category $category): void
     {
         $this->category = $category;
     }
 
+    /**
+     * @return Collection
+     */
+    public function getCategories(): Collection
+    {
+        return $this->categories;
+    }
 
+    /**
+     * @param Collection $categories
+     */
+    public function setCategories(Collection $categories): void
+    {
+        $this->categories = $categories;
+    }
+
+    public function getName(): string
+    {
+        return $this->category->getName();
+    }
 }

@@ -21,20 +21,23 @@ class Course
     #[ORM\Column(length: 255)]
     private ?string $title = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $picture = null;
+
     #[ORM\Column(type: Types::TEXT)]
     private ?string $content = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $picture = null;
+    #[ORM\ManyToMany(targetEntity: Category::class, inversedBy: 'courses')]
+    #[ORM\JoinTable(name: 'course_category')]
+    #[ORM\JoinColumn(name: 'course', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn('category', referencedColumnName: 'id')]
+    private Collection $categories;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $updatedAt = null;
-
-    #[ORM\OneToMany(mappedBy: 'course', targetEntity: CourseCategory::class)]
-    private Collection $categories;
 
     public function __construct()
     {
@@ -58,6 +61,18 @@ class Course
         return $this;
     }
 
+    public function getPicture(): ?string
+    {
+        return $this->picture;
+    }
+
+    public function setPicture(string $picture): self
+    {
+        $this->picture = $picture;
+
+        return $this;
+    }
+
     public function getContent(): ?string
     {
         return $this->content;
@@ -70,14 +85,26 @@ class Course
         return $this;
     }
 
-    public function getPicture(): ?string
+    /**
+     * @return Collection<int, Category>
+     */
+    public function getCategories(): Collection
     {
-        return $this->picture;
+        return $this->categories;
     }
 
-    public function setPicture(string $picture): self
+    public function addCategory(Category $category): self
     {
-        $this->picture = $picture;
+        if (!$this->categories->contains($category)) {
+            $this->categories->add($category);
+        }
+
+        return $this;
+    }
+
+    public function removeCategory(Category $category): self
+    {
+        $this->categories->removeElement($category);
 
         return $this;
     }
@@ -106,33 +133,4 @@ class Course
         return $this;
     }
 
-    /**
-     * @return Collection<int, CourseCategory>
-     */
-    public function getCategories(): Collection
-    {
-        return $this->categories;
-    }
-
-    public function addCategory(CourseCategory $category): self
-    {
-        if (!$this->categories->contains($category)) {
-            $this->categories->add($category);
-            $category->setCourse($this);
-        }
-
-        return $this;
-    }
-
-    public function removeCategory(CourseCategory $category): self
-    {
-        if ($this->categories->removeElement($category)) {
-            // set the owning side to null (unless already changed)
-            if ($category->getCourse() === $this) {
-                $category->setCourse(null);
-            }
-        }
-
-        return $this;
-    }
 }

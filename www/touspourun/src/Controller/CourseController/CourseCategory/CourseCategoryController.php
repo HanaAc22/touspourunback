@@ -2,7 +2,7 @@
 
 namespace App\Controller\CourseController\CourseCategory;
 
-use App\Entity\Courses\Category;
+use App\Entity\Category;
 use App\Form\Course\CategoryType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

@@ -20,7 +20,7 @@ class Category
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[ORM\OneToMany(mappedBy: 'category', targetEntity: CourseCategory::class)]
+    #[ORM\ManyToMany(targetEntity: Course::class, mappedBy: 'categories')]
     private Collection $courses;
 
     public function __construct()
@@ -46,30 +46,27 @@ class Category
     }
 
     /**
-     * @return Collection<int, CourseCategory>
+     * @return Collection<int, Course>
      */
     public function getCourses(): Collection
     {
         return $this->courses;
     }
 
-    public function addCourse(CourseCategory $course): self
+    public function addCourse(Course $course): self
     {
         if (!$this->courses->contains($course)) {
             $this->courses->add($course);
-            $course->setCategory($this);
+            $course->addCategory($this);
         }
 
         return $this;
     }
 
-    public function removeCourse(CourseCategory $course): self
+    public function removeCourse(Course $course): self
     {
         if ($this->courses->removeElement($course)) {
-            // set the owning side to null (unless already changed)
-            if ($course->getCategory() === $this) {
-                $course->setCategory(null);
-            }
+            $course->removeCategory($this);
         }
 
         return $this;

@@ -28,18 +28,18 @@ abstract class AbstractFixture extends Fixture
         }
         $manager->flush();
     }
-    protected function getDir(): string
+    public function getDir(): string
     {
         return __DIR__.'/datas';
     }
-    protected function getFileNameToParse(): string
+    public function getFileNameToParse(): string
     {
         return sprintf('%s.yaml', static::getReferenceName());
     }
     /**
      * @params array<string, mixed> $data
      */
-    abstract protected function buildEntity(array $data): mixed;
+    abstract public function buildEntity(array $data): mixed;
     abstract public static function getReferenceName(): string;
 
 }

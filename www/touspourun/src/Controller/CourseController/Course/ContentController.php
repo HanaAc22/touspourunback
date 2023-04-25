@@ -4,6 +4,7 @@ namespace App\Controller\CourseController\Course;
 
 use App\Command\Course\Message\CourseCommand;
 use App\Controller\CourseController\CourseTrait\PictureExtentionTrait;
+use App\Entity\Category;
 use App\Entity\Course;
 use App\Form\Course\ContentType;
 use App\Form\Model\ContentFormModel;
@@ -20,7 +21,7 @@ class ContentController extends AbstractController
 {
     use PictureExtentionTrait;
     #[Route('/create', name: 'create')]
-    public function create(SluggerInterface $slugger, Request $request, MessageBusInterface $messageBus): Response
+    public function create(SluggerInterface $slugger, Request $request, MessageBusInterface $messageBus, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(ContentType::class);
         $form->handleRequest($request);
@@ -28,8 +29,9 @@ class ContentController extends AbstractController
         if ($form->isSubmitted() && $form->isValid())
         {
             $course = new Course();
-
+            $category = new Category();
             $courseModel = new ContentFormModel();
+            $categories = $entityManager->getRepository(Category::class)->findAll();
 
             $courseModel = $form->getData();
             $imageFile = $form->get('picture')->getData();
@@ -39,12 +41,13 @@ class ContentController extends AbstractController
                 $course->setPicture($newFilename);
             }
 
-            $messageBus->dispatch(new CourseCommand($course, $courseModel));
+           $messageBus->dispatch(new CourseCommand($course, $courseModel, $category));
 
             return new Response('course created with success');
         }
             return $this->render('courses/course_content/createContent.html.twig', [
-                'contentCreateForm' => $form->createView()
+                'contentCreateForm' => $form->createView(),
+                'categories' => $categories,
             ]);
     }
 
@@ -54,6 +57,7 @@ class ContentController extends AbstractController
         $course = $entityManager->getRepository(Course::class)->find($id);
 
         $courseModel = new ContentFormModel($course);
+        $caregory = new Category();
 
         $form = $this->createForm(ContentType::class, $courseModel);
         $form->handleRequest($request);
@@ -69,7 +73,7 @@ class ContentController extends AbstractController
                 $course->setPicture($newFilename);
             }
 
-            $messageBus->dispatch(new CourseCommand($course, $courseModel));
+            $messageBus->dispatch(new CourseCommand($course, $courseModel, $caregory));
 
             return new Response('course created with success');
         }
@@ -78,5 +82,4 @@ class ContentController extends AbstractController
             'updateContentForm' => $form->createView(),
         ]);
     }
-
 }
