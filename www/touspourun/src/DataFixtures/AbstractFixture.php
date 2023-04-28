@@ -23,7 +23,8 @@ abstract class AbstractFixture extends Fixture
             $manager->persist($entity);
 
             if(is_string($key) && $reference = static::getReferenceName()){
-                $this->addReference(sprintf('%s/%s', $reference, $key, $entity));
+                $referenceId = sprintf('%s/%s', $reference, $key);
+                $this->addReference($referenceId, $entity);
             }
         }
         $manager->flush();

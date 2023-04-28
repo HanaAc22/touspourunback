@@ -30,8 +30,6 @@ class ContentController extends AbstractController
         {
             $course = new Course();
             $category = new Category();
-            $courseModel = new ContentFormModel();
-            $categories = $entityManager->getRepository(Category::class)->findAll();
 
             $courseModel = $form->getData();
             $imageFile = $form->get('picture')->getData();
@@ -47,7 +45,6 @@ class ContentController extends AbstractController
         }
             return $this->render('courses/course_content/createContent.html.twig', [
                 'contentCreateForm' => $form->createView(),
-                'categories' => $categories,
             ]);
     }
 
