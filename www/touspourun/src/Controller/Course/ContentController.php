@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Controller\CourseController\Course;
+namespace App\Controller\Course;
 
 use App\Command\Course\Message\CourseCommand;
-use App\Controller\CourseController\CourseTrait\PictureExtentionTrait;
 use App\Entity\Category;
 use App\Entity\Course;
 use App\Form\Course\ContentType;
 use App\Form\Model\ContentFormModel;
+use App\Trait\PictureExtentionTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,7 +21,7 @@ class ContentController extends AbstractController
 {
     use PictureExtentionTrait;
     #[Route('/create', name: 'create')]
-    public function create(SluggerInterface $slugger, Request $request, MessageBusInterface $messageBus, EntityManagerInterface $entityManager): Response
+    public function create(SluggerInterface $slugger, Request $request, MessageBusInterface $messageBus): Response
     {
         $form = $this->createForm(ContentType::class);
         $form->handleRequest($request);

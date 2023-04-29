@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\CourseController\Course;
+namespace App\Controller\Course;
 
 use App\Entity\Course;
 use Doctrine\ORM\EntityManagerInterface;

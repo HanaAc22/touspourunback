@@ -2,8 +2,8 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\Answer;
-use App\Entity\Question;
+use App\Factory\AnswerFactory;
+use App\Factory\QuestionFactory;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
@@ -11,19 +11,17 @@ class QuestionFixture extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
-        $answer = new Answer();
-        $answer->setContent('This question is the best? I wish... I knew the answer.');
-        $answer->setUsername('weaverryan');
+       $questions = QuestionFactory::createMany(10);
 
-        $question = new Question();
-        $question->setName('How to un-disappear your wallet.');
-        $question->setQuestion('... I should not have done this...');
-        $question->setCreatedAt(new \DateTimeImmutable('now'));
-        $answer->setQuestion($question);
+       QuestionFactory::new()
+           ->many(5)
+           ->create()
+       ;
 
-        $manager->persist($answer);
-        $manager->persist($question);
-        $manager->flush();
-
+       AnswerFactory::createMany(5, function() use ($questions){
+          return [
+           'question' => $questions[array_rand($questions)]
+           ];
+       });
     }
 }

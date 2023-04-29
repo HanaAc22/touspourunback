@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\CourseController\CourseTrait;
+namespace App\Trait;
 
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;

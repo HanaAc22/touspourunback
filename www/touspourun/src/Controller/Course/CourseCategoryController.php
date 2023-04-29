@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\CourseController\CourseCategory;
+namespace App\Controller\Course;
 
 use App\Entity\Category;
 use App\Form\Course\CategoryType;
