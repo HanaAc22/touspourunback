@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>{{ question.name }}</h1>
+    <h3>{{ question.question }}</h3>
+    {% for answer in question.answers %}
+        <p>{{ answer.content }}</p>
+    {% endfor %}
+
+    <h1>Ask</h1>
+    {{ form(answerForm) }}
+{% endblock %}

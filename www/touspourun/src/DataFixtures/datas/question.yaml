@@ -1,0 +1,7 @@
+Question:
+  question1:
+    name: Question 1
+    question: This is the first question.
+  question2:
+    name: Question 2
+    question: This is the second question.

@@ -4,12 +4,12 @@ namespace App\DataFixtures;
 
 use App\Entity\Course;
 use DateTimeImmutable;
+use Exception;
 
 class CourseFixture extends AbstractFixture
 {
-
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function buildEntity(array $data): Course
     {
@@ -22,8 +22,9 @@ class CourseFixture extends AbstractFixture
             ->setPicture($data['picture'])
         ;
 
-        return $course;
+        $this->setReference(self::getReferenceName(), $course);
 
+        return $course;
     }
 
     public static function getReferenceName(): string

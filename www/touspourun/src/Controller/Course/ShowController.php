@@ -16,7 +16,7 @@ class ShowController extends AbstractController
     {
         $courses = $entityManager->getRepository(Course::class)->findAll();
 
-        return $this->render('Content/show.html.twig',[
+        return $this->render('courses/course_content/show.html.twig',[
             'courses' => $courses
         ]);
     }

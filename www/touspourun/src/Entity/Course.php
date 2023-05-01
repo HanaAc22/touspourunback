@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+
 #[ORM\Entity(repositoryClass: CourseRepository::class)]
 #[ApiResource]
 class Course
@@ -20,24 +21,27 @@ class Course
     #[ORM\Column(length: 255)]
     private ?string $title = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $picture = null;
+
     #[ORM\Column(type: Types::TEXT)]
     private ?string $content = null;
+
+    #[ORM\ManyToMany(targetEntity: Category::class, inversedBy: 'courses')]
+    #[ORM\JoinTable(name: 'course_category')]
+    #[ORM\JoinColumn(name: 'course', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn('category', referencedColumnName: 'id')]
+    private Collection $categories;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column(nullable: true)]
-    private ?string $picture = null;
-
-    #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $updatedAt = null;
-
-    #[ORM\OneToMany(mappedBy: 'course', targetEntity: CourseCategoryJoin::class)]
-    private Collection $courseJoin;
 
     public function __construct()
     {
-        $this->courseJoin = new ArrayCollection();
+        $this->categories = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -57,18 +61,17 @@ class Course
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    public function getPicture(): ?string
     {
-        return $this->createdAt;
+        return $this->picture;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $createdAt): self
+    public function setPicture(string $picture): self
     {
-        $this->createdAt = $createdAt;
+        $this->picture = $picture;
 
         return $this;
     }
-
 
     public function getContent(): ?string
     {
@@ -82,18 +85,40 @@ class Course
         return $this;
     }
 
-    public function setPicture(string $picture): self
+    /**
+     * @return Collection<int, Category>
+     */
+    public function getCategories(): Collection
     {
-        $this->picture = $picture;
+        return $this->categories;
+    }
 
-        $this->updatedAt = new \DateTimeImmutable();
+    public function addCategory(Category $category): self
+    {
+        if (!$this->categories->contains($category)) {
+            $this->categories->add($category);
+        }
 
         return $this;
     }
 
-    public function getPicture(): string
+    public function removeCategory(Category $category): self
     {
-        return $this->picture;
+        $this->categories->removeElement($category);
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $createdAt): self
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
     }
 
     public function getUpdatedAt(): ?\DateTimeImmutable
@@ -104,36 +129,6 @@ class Course
     public function setUpdatedAt(?\DateTimeImmutable $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, CourseCategoryJoin>
-     */
-    public function getCourseJoin(): Collection
-    {
-        return $this->courseJoin;
-    }
-
-    public function addCourseJoin(CourseCategoryJoin $courseJoin): self
-    {
-        if (!$this->courseJoin->contains($courseJoin)) {
-            $this->courseJoin->add($courseJoin);
-            $courseJoin->setCourse($this);
-        }
-
-        return $this;
-    }
-
-    public function removeCourseJoin(CourseCategoryJoin $courseJoin): self
-    {
-        if ($this->courseJoin->removeElement($courseJoin)) {
-            // set the owning side to null (unless already changed)
-            if ($courseJoin->getCourse() === $this) {
-                $courseJoin->setCourse(null);
-            }
-        }
 
         return $this;
     }

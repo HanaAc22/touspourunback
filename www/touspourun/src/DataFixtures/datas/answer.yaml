@@ -1,0 +1,10 @@
+Answer:
+  answer1:
+    username: 'user1'
+    content: 'This is answer 1'
+    question: '@question1'
+
+  answer2:
+    username: 'user2'
+    content: 'This is answer 2'
+    question: '@question2'
