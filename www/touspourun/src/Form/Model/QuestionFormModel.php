@@ -10,16 +10,22 @@ use Symfony\Component\Validator\Constraints as Assert;
 class QuestionFormModel
 {
     #[Assert\NotBlank]
-    private string $name = '';
-    private string $slug = '';
+    private string $name;
+    private string $slug;
     #[Assert\NotBlank]
     private ?string $question = null;
 
     private DateTimeImmutable $createdAt;
 
-    public function __construct(?Question $question = null)
+    public function __construct(Question $question)
     {
         $this->createdAt = new DateTimeImmutable();
+
+        if($question) {
+            $this->name = $question->getName();
+            $this->question = $question->getQuestion();
+            $this->slug = $question->getQuestion();
+        }
     }
 
     /**

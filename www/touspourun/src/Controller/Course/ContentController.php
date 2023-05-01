@@ -49,7 +49,7 @@ class ContentController extends AbstractController
     }
 
     #[Route('/update/{id}', name: '_update')]
-    public  function edit($id, Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger ,MessageBusInterface $messageBus): Response
+    public  function edit(int $id, Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger ,MessageBusInterface $messageBus): Response
     {
         $course = $entityManager->getRepository(Course::class)->find($id);
 

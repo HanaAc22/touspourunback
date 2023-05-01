@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/forum', name:'forum_')]
-class QuestionController extends AbstractController
+class ForumController extends AbstractController
 {
     public function __construct(
         private readOnly EntityManagerInterface $entityManager
@@ -53,49 +53,33 @@ class QuestionController extends AbstractController
         ]);
     }
 
-    #[Route('/questions/show', name: 'questions_show')]
-    public function showAll(
-        QuestionRepository $questionRepository,
-    ): Response
-    {
-        $questions = $questionRepository->findQuestionsWithAnswers();
-
-        return $this->render('forum/show-all.html.twig', [
-
-            'questions' => $questions,
-        ]);
-    }
-
-    #[Route('/question/show/{id}', name: 'question_show')]
-    public function show(
-        EntityManagerInterface $entityManager,
+    #[Route('/question/update/{id}', name: 'question_update')]
+    public function update(
+        int $id,
         Request $request,
-        int $id
     ): Response
     {
-        $question = $entityManager->getRepository(Question::class)->find($id);
+        $question = $this->entityManager->getRepository(Question::class)->find($id);
+        $questionModel = new QuestionFormModel($question);
 
-        $answer = new Answer();
-
-        $form = $this->createForm(AnswerType::class, $answer);
+        $form = $this->createForm(QuestionType::class, $questionModel);
         $form->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid()){
+            $questionModel = $form->getData();
 
-            $question = $entityManager->getRepository(Question::class)->find($id);
-
-            $answer
-                ->setUsername($answer->getUsername())
-                ->setContent($answer->getContent())
-                ->setQuestion($question)
+            $question
+                ->setName($questionModel->getName())
+                ->setQuestion($questionModel->getQuestion())
+                ->setSlug($questionModel->getQuestion())
             ;
-            $entityManager->persist($answer);
-            $entityManager->flush();
+
+            $this->entityManager->persist($question);
+            $this->entityManager->flush();
         }
 
-        return $this->render('forum/show.html.twig', [
-            'question' => $question,
-            'answerForm' => $form->createView()
+        return $this->render('forum/update-question.html.twig', [
+            'updateQuestionForm' => $form->createView()
         ]);
     }
 }
