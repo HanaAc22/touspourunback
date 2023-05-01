@@ -21,31 +21,27 @@ class Course
     #[ORM\Column(length: 255)]
     private ?string $title = null;
 
-    #[ORM\Column]
-    private ?\DateTimeImmutable $createdAt = null;
-
-    #[ORM\Column]
-    private ?\DateTimeImmutable $updatedAt = null;
+    #[ORM\Column(length: 255)]
+    private ?string $picture = null;
 
     #[ORM\Column(type: Types::TEXT)]
     private ?string $content = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $picture = null;
+    #[ORM\ManyToMany(targetEntity: Category::class, inversedBy: 'courses')]
+    #[ORM\JoinTable(name: 'course_category')]
+    #[ORM\JoinColumn(name: 'course', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn('category', referencedColumnName: 'id')]
+    private Collection $categories;
 
-    #[ORM\OneToOne(mappedBy: 'course', cascade: ['persist', 'remove'])]
-    private ?CourseStatus $courseStatus = null;
+    #[ORM\Column]
+    private ?\DateTimeImmutable $createdAt = null;
 
-    #[ORM\OneToMany(mappedBy: 'course', targetEntity: CourseCategories::class)]
-    private Collection $courseCategories;
-
-    #[ORM\OneToMany(mappedBy: 'course', targetEntity: CourseComments::class)]
-    private Collection $courseComments;
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $updatedAt = null;
 
     public function __construct()
     {
-        $this->courseCategories = new ArrayCollection();
-        $this->courseComments = new ArrayCollection();
+        $this->categories = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -61,6 +57,54 @@ class Course
     public function setTitle(string $title): self
     {
         $this->title = $title;
+
+        return $this;
+    }
+
+    public function getPicture(): ?string
+    {
+        return $this->picture;
+    }
+
+    public function setPicture(string $picture): self
+    {
+        $this->picture = $picture;
+
+        return $this;
+    }
+
+    public function getContent(): ?string
+    {
+        return $this->content;
+    }
+
+    public function setContent(string $content): self
+    {
+        $this->content = $content;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Category>
+     */
+    public function getCategories(): Collection
+    {
+        return $this->categories;
+    }
+
+    public function addCategory(Category $category): self
+    {
+        if (!$this->categories->contains($category)) {
+            $this->categories->add($category);
+        }
+
+        return $this;
+    }
+
+    public function removeCategory(Category $category): self
+    {
+        $this->categories->removeElement($category);
 
         return $this;
     }
@@ -82,111 +126,11 @@ class Course
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(\DateTimeImmutable $updatedAt): self
+    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
 
         return $this;
     }
 
-    public function getContent(): ?string
-    {
-        return $this->content;
-    }
-
-    public function setContent(string $content): self
-    {
-        $this->content = $content;
-
-        return $this;
-    }
-
-    public function getPicture(): ?string
-    {
-        return $this->picture;
-    }
-
-    public function setPicture(string $picture): self
-    {
-        $this->picture = $picture;
-
-        return $this;
-    }
-
-    public function getCourseStatus(): ?CourseStatus
-    {
-        return $this->courseStatus;
-    }
-
-    public function setCourseStatus(CourseStatus $courseStatus): self
-    {
-        // set the owning side of the relation if necessary
-        if ($courseStatus->getCourse() !== $this) {
-            $courseStatus->setCourse($this);
-        }
-
-        $this->courseStatus = $courseStatus;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, CourseCategories>
-     */
-    public function getCourseCategories(): Collection
-    {
-        return $this->courseCategories;
-    }
-
-    public function addCourseCategory(CourseCategories $courseCategory): self
-    {
-        if (!$this->courseCategories->contains($courseCategory)) {
-            $this->courseCategories->add($courseCategory);
-            $courseCategory->setCourse($this);
-        }
-
-        return $this;
-    }
-
-    public function removeCourseCategory(CourseCategories $courseCategory): self
-    {
-        if ($this->courseCategories->removeElement($courseCategory)) {
-            // set the owning side to null (unless already changed)
-            if ($courseCategory->getCourse() === $this) {
-                $courseCategory->setCourse(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, CourseComments>
-     */
-    public function getCourseComments(): Collection
-    {
-        return $this->courseComments;
-    }
-
-    public function addCourseComment(CourseComments $courseComment): self
-    {
-        if (!$this->courseComments->contains($courseComment)) {
-            $this->courseComments->add($courseComment);
-            $courseComment->setCourse($this);
-        }
-
-        return $this;
-    }
-
-    public function removeCourseComment(CourseComments $courseComment): self
-    {
-        if ($this->courseComments->removeElement($courseComment)) {
-            // set the owning side to null (unless already changed)
-            if ($courseComment->getCourse() === $this) {
-                $courseComment->setCourse(null);
-            }
-        }
-
-        return $this;
-    }
 }

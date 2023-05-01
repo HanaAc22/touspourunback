@@ -14,3 +14,4 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 
 # Mysql driver
 RUN docker-php-ext-install pdo pdo_mysql
+RUN usermod -u 1000 www-data

@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+   <h1>All Questions</h1>
+   {% for question in questions %}
+      <div style="background-color: #99bfbf">
+         <h5 style="color: #a74931">{{ question.name }}</h5>
+         <p >{{ question.question }}</p>
+      </div>
+      <div style="background-color: #3f82e8">
+         <h1>Answers</h1>
+         {% for answer in question.answers %}
+            {% if answer.content is empty  %}
+               <p style="color: red">This question has no answers </p>
+            {% endif %}
+         <p>{{ answer.content }}</p>
+         {% endfor %}
+      </div>
+   {% endfor %}
+{% endblock %}
