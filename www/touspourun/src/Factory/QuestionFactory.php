@@ -54,11 +54,6 @@ final class QuestionFactory extends ModelFactory
         ];
     }
 
-//    public function unpublised(): self
-//    {
-//        return $this->addState(['AskedAt' => null]);
-//    }
-
     /**
      * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#initialization
      */

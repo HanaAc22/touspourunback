@@ -18,7 +18,7 @@ class QuestionFixture extends Fixture
            ->create()
        ;
 
-       AnswerFactory::createMany(5, function() use ($questions){
+       AnswerFactory::createMany(60, function() use ($questions){
           return [
            'question' => $questions[array_rand($questions)]
            ];

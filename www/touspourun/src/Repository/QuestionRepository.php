@@ -21,6 +21,18 @@ class QuestionRepository extends ServiceEntityRepository
         parent::__construct($registry, Question::class);
     }
 
+    public function findQuestionsWithAnswers(): array
+    {
+        $qb = $this->createQueryBuilder('question');
+
+        return $qb
+            ->leftJoin('question.answers', 'answer')
+            ->addSelect('answer')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
     public function save(Question $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
