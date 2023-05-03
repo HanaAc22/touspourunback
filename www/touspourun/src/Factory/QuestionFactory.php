@@ -51,6 +51,7 @@ final class QuestionFactory extends ModelFactory
             'name' => self::faker()->name(),
             'question' => self::faker()->realText(50),
             'votes' => self::faker()->randomNumber(),
+            'isDeleted' => false
         ];
     }
 

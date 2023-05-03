@@ -28,6 +28,7 @@ class QuestionRepository extends ServiceEntityRepository
         return $qb
             ->leftJoin('question.answers', 'answer')
             ->addSelect('answer')
+            ->where('question.isDeleted = false')
             ->getQuery()
             ->getResult()
         ;

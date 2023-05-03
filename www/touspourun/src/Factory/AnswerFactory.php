@@ -51,6 +51,8 @@ final class AnswerFactory extends ModelFactory
             'question' => QuestionFactory::new(),
             'username' => self::faker()->userName(),
             'votes' => self::faker()->numberBetween(-20, 50),
+            'isDeleted' => false
+
         ];
     }
 

@@ -20,6 +20,7 @@ class CourseFixture extends AbstractFixture
             ->setContent($data['content'])
             ->setCreatedAt(new DateTimeImmutable($data['createdAt']))
             ->setPicture($data['picture'])
+            ->setIsDeleted($data['isDeleted'])
         ;
 
         $this->setReference(self::getReferenceName(), $course);

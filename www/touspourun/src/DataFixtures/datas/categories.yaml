@@ -1,6 +1,8 @@
 -
   name: Français
+  isDeleted: false
+
 
 -
   name: Math
-
+  isDeleted: false

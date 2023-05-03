@@ -17,6 +17,7 @@ class CategoryFixture extends AbstractFixture implements DependentFixtureInterfa
 
         $category
             ->setName($data['name'])
+            ->setIsDeleted($data['isDeleted'])
             ->getCourses()
         ;
 

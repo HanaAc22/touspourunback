@@ -82,4 +82,19 @@ class ForumController extends AbstractController
             'updateQuestionForm' => $form->createView()
         ]);
     }
+
+    #[Route('/question/delete/{id}', name:'delete_question')]
+    public function delete(
+        int $id
+    ): Response
+    {
+        $question = $this->entityManager->getRepository(Question::class)->find($id);
+
+        $question->setIsDeleted(true);
+
+        $this->entityManager->persist($question);
+        $this->entityManager->flush();
+
+        return $this->redirectToRoute('forum_questions_show');
+    }
 }
